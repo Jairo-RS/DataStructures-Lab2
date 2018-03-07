@@ -1,5 +1,7 @@
 package arrayIndexList;
 
+import java.lang.reflect.Array;
+
 import indexList.IndexList;
 
 public class ArrayIndexList<E> implements IndexList<E> {
@@ -17,7 +19,7 @@ public class ArrayIndexList<E> implements IndexList<E> {
 
 	public void add(int index, E e) throws IndexOutOfBoundsException {
 		if(index < 0 || index > this.size) {
-			throw new IndexOutOfBoundsException("add: invalid index =" + index);
+			throw new IndexOutOfBoundsException("add: invalid index = " + index);
 		}
 		if(this.size == element.length) {
 			this.changeCapacity(CAPTOAR);
@@ -39,7 +41,7 @@ public class ArrayIndexList<E> implements IndexList<E> {
 
 	public E get(int index) throws IndexOutOfBoundsException {
 		if(index < 0 || index > this.size) {
-			throw new IndexOutOfBoundsException("get: invalid index =" + index);
+			throw new IndexOutOfBoundsException("get: invalid index = " + index);
 		}	
 		return element[index]; 
 	}
@@ -52,8 +54,8 @@ public class ArrayIndexList<E> implements IndexList<E> {
 
 	public E remove(int index) throws IndexOutOfBoundsException {
 		//rElement : Removed Element
-		if(index < 0 || index > this.size) {
-			throw new IndexOutOfBoundsException("remove: invalid index =" + index);
+		if(index < 0 || index > this.size-1) {
+			throw new IndexOutOfBoundsException("remove: invalid index = " + index);
 		}
 		if(MAXEMPTYPOS <= (element.length - this.size)){
 			this.changeCapacity(-CAPTOAR);
@@ -69,7 +71,7 @@ public class ArrayIndexList<E> implements IndexList<E> {
 	public E set(int index, E e) throws IndexOutOfBoundsException {
 		//rElement : Removed Element
 		if(index < 0 || index > this.size) {
-			throw new IndexOutOfBoundsException("set: invalid index =" + index);
+			throw new IndexOutOfBoundsException("set: invalid index = " + index);
 		}
 		E rElement = element[index];
 		element[index] = e;
@@ -81,6 +83,7 @@ public class ArrayIndexList<E> implements IndexList<E> {
 		return size;
 	}	
 	
+	@Override
 	public int capacity() {
 		return element.length;
 	}
@@ -121,15 +124,28 @@ public class ArrayIndexList<E> implements IndexList<E> {
 
 	// The following two methods are to be implemented as part of an exercise
 	public Object[] toArray() {
-		// TODO es in Exercise 3
-		return null;
+		Object[] newArray = new Object[this.size];
+		for(int i=0; i<element.length; i++){
+			newArray[i] = element[i];
+		}
+		return newArray;
 	}
 
 
 	@Override
 	public <T1> T1[] toArray(T1[] array) {
-		// TODO as in Exercise 3
-		return null;
+		if(array.length < this.size){
+			array = (T1[]) Array.newInstance(array.getClass().getComponentType(), this.size);
+		}
+		else if(array.length>size){
+			for(int j=this.size; j<array.length;j++){
+				array[j] = null;
+			}
+		}
+		for(int i=0; i<this.size; i++){
+			array[i] = (T1) element[i];
+		}
+		return array;
 	}
 
 }
